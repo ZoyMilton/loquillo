@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>ZoyTV Plus</title>
+    <!-- FAVICON -->
+    <link rel="icon" type="image/png" sizes="72x72" href="images/favicon.ico"/>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            height: 100vh;
+            background-color: #000;
+            color: white;
+            font-family: Arial, sans-serif;
+        }
+        #header {
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            background: #111;
+            position: relative;
+        }
+        #title {
+            flex-grow: 1;
+            text-align: center;
+            font-size: 18px;
+            font-weight: bold;
+        }
+        #search-container {
+            display: none;
+            position: absolute;
+            top: 50px;
+            left: 10px;
+            right: 10px;
+            background: #222;
+            padding: 5px;
+            border-radius: 5px;
+        }
+        #search-input {
+            width: 100%;
+            padding: 5px;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        #search-icon {
+            font-size: 24px;
+            cursor: pointer;
+        }
+        #logo {
+            height: 40px;
+        }
+        #player-container {
+            width: 100%;
+            height: 33vh;
+            background: black;
+        }
+        video {
+            width: 100%;
+            height: 100%;
+        }
+        #categories {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            padding: 10px;
+            background: #222;
+        }
+        .category {
+            margin: 5px;
+            padding: 10px 15px;
+            background: #444;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        #channels {
+            width: 100%;
+            height: 67vh;
+            overflow-y: auto;
+            background: #111;
+            padding: 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .channel {
+            display: flex;
+            align-items: center;
+            width: 90%;
+            padding: 10px;
+            cursor: pointer;
+            border-bottom: 1px solid #333;
+            background: #222;
+            border-radius: 5px;
+            margin: 5px 0;
+        }
+        .channel img {
+            width: 50px;
+            height: 50px;
+            margin-right: 10px;
+            border-radius: 5px;
+        }
+        @media (min-width: 768px) {
+            #player-container {
+                height: 40vh;
+            }
+            #channels {
+                height: 60vh;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="header">
+        <div id="title">ZoyTV Plus</div>
+        <span id="search-icon" onclick="toggleSearch()">🔍</span>
+    </div>
+    <div id="search-container">
+        <input type="text" id="search-input" placeholder="Buscar canal..." oninput="searchChannel()">
+    </div>
+    <div id="player-container">
+        <video id="player" controls>
+            <source src="" type="application/x-mpegURL">
+        </video>
+    </div>
+    <div id="categories">
+        <span class="category" onclick="filterChannels('ZoyTV')">ZoyTV</span>
+        <span class="category" onclick="filterChannels('Novelas')">Novelas</span>
+        <span class="category" onclick="filterChannels('Infantil')">Infantil</span>
+        <span class="category" onclick="filterChannels('Deportes')">Deportes</span>
+        <span class="category" onclick="filterChannels('Cine')">Cine</span>
+        <span class="category" onclick="filterChannels('Cultura')">Cultura</span>
+        <span class="category" onclick="filterChannels('Noticias')">Noticias</span>
+        <span class="category" onclick="filterChannels('Música')">Música</span>
+        <span class="category" onclick="filterChannels('Entretenimiento')">Entretenimiento</span>
+        <span class="category" onclick="filterChannels('Argentina')">Argentina</span>
+        <span class="category" onclick="filterChannels('Bolivia')">Bolivia</span>
+        <span class="category" onclick="filterChannels('Perú')">Perú</span>
+        <span class="category" onclick="filterChannels('Brasil')">Brasil</span>
+        <span class="category" onclick="filterChannels('México')">México</span>
+        <span class="category" onclick="filterChannels('Chile')">Chile</span>
+        <span class="category" onclick="filterChannels('Paraguay')">Paraguay</span>
+        <span class="category" onclick="filterChannels('Uruguay')">Uruguay</span>
+        <span class="category" onclick="filterChannels('Ecuador')">Ecuador</span>
+        <span class="category" onclick="filterChannels('Colombia')">Colombia</span>
+        <span class="category" onclick="filterChannels('CentroAmérica')">CentroAmérica</span>
+        <span class="category" onclick="filterChannels('USA')">USA</span>
+        <span class="category" onclick="filterChannels('Libres')">Libres</span>
+        <span class="category" onclick="filterChannels('+18')">+18</span>
+        
+    </div>
+    <div id="channels">
+        <div class="channel" data-category="ZoyTV" onclick="changeChannel('https://fl1004.bozztv.com/ssh101/zoytv/index.m3u8')">
+            <img src="https://i.ibb.co/hxzjjS7/favicon.png" alt="ZoyTV Plus">
+            <span>Zoy Plus</span>
+        </div>
+        <div class="channel" data-category="ZoyTV" onclick="changeChannel('https://fl1004.bozztv.com/ssh101/zoytvturcas/index.m3u8')">
+            <img src="https://i.ibb.co/hxzjjS7/favicon.png" alt="ZoyTV Plus">
+            <span>Zoy Turcas</span>
+        </div>
+        <div class="channel" data-category="ZoyTV" onclick="changeChannel('https://fl1004.bozztv.com/ssh101/zoytvkids/index.m3u8')">
+            <img src="https://i.ibb.co/hxzjjS7/favicon.png" alt="ZoyTV Plus">
+            <span>Zoy Bolivia</span>
+        </div>
+        <div class="channel" data-category="ZoyTV" onclick="changeChannel('https://is.gd/aOam0G')">
+            <img src="https://i.ibb.co/hxzjjS7/favicon.png" alt="ZoyTV Plus">
+            <span>Zoy Música</span>
+        </div>
+        <div class="channel" data-category="ZoyTV" onclick="changeChannel('http://88.212.7.11/live/test_erox_hd_hevc/playlist.m3u8?ZoyMilton')">
+            <img src="https://i.ibb.co/hxzjjS7/favicon.png" alt="Infantil">
+            <span>Zoy eroXXX</span>
+        </div>
+        <div class="channel" data-category="ZoyTV" onclick="changeChannel('https://fl1004.bozztv.com/ssh101/zoytvsports/index.m3u8')">
+            <img src="https://i.ibb.co/hxzjjS7/favicon.png" alt="ZoyTV Plus">
+            <span>Zoy Sports 1</span>
+        </div>
+
+
+
+
+        <div class="channel" data-category="Novelas" onclick="changeChannel('http://177.53.155.236:8000/play/a037/index.m3u8')">
+            <img src="https://i.ibb.co/hxzjjS7/favicon.png" alt="ZoyTV Plus">
+            <span>Kanal D Drama</span>
+        </div>
+        <div class="channel" data-category="Novelas" onclick="changeChannel('http://177.53.155.236:8000/play/a037/index.m3u8')">
+            <img src="https://i.ibb.co/hxzjjS7/favicon.png" alt="ZoyTV Plus">
+            <span>Telemundo</span>
+        </div>
+        <div class="channel" data-category="Novelas" onclick="changeChannel('http://177.53.155.236:8000/play/a037/index.m3u8')">
+            <img src="https://i.ibb.co/hxzjjS7/favicon.png" alt="ZoyTV Plus">
+            <span>Telenovelas</span>
+        </div>
+        <div class="channel" data-category="Novelas" onclick="changeChannel('http://177.53.155.236:8000/play/a037/index.m3u8')">
+            <img src="https://i.ibb.co/hxzjjS7/favicon.png" alt="ZoyTV Plus">
+            <span>TNT Novelas</span>
+        </div>
+        <div class="channel" data-category="Novelas" onclick="changeChannel('http://177.53.155.236:8000/play/a02z/index.m3u8')">
+            <img src="https://i.ibb.co/hxzjjS7/favicon.png" alt="Infantil">
+            <span>Las Estrellas</span>
+        </div>
+        <div class="channel" data-category="Novelas" onclick="changeChannel('http://177.53.155.236:8000/play/a037/index.m3u8')">
+            <img src="https://i.ibb.co/hxzjjS7/favicon.png" alt="ZoyTV Plus">
+            <span>AZ Mundo</span>
+        </div>
+        <div class="channel" data-category="Novelas" onclick="changeChannel('http://177.53.155.236:8000/play/a037/index.m3u8')">
+            <img src="https://i.ibb.co/hxzjjS7/favicon.png" alt="ZoyTV Plus">
+            <span>Pasiones</span>
+        </div>
+        <div class="channel" data-category="Novelas" onclick="changeChannel('http://177.53.155.236:8000/play/a037/index.m3u8')">
+            <img src="https://i.ibb.co/hxzjjS7/favicon.png" alt="ZoyTV Plus">
+            <span>RCN</span>
+        </div>
+        <div class="channel" data-category="Novelas" onclick="changeChannel('http://177.53.155.236:8000/play/a037/index.m3u8')">
+            <img src="https://i.ibb.co/hxzjjS7/favicon.png" alt="ZoyTV Plus">
+            <span>Zoy Turcas</span>
+        </div>
+        <div class="channel" data-category="Novelas" onclick="changeChannel('http://177.53.155.236:8000/play/a037/index.m3u8')">
+            <img src="https://i.ibb.co/hxzjjS7/favicon.png" alt="ZoyTV Plus">
+            <span>Zoy Corazón</span>
+        </div>
+        <div class="channel" data-category="Novelas" onclick="changeChannel('http://177.53.155.236:8000/play/a037/index.m3u8')">
+            <img src="https://i.ibb.co/hxzjjS7/favicon.png" alt="ZoyTV Plus">
+            <span>Zoy Canela</span>
+        </div>
+        <div class="channel" data-category="Novelas" onclick="changeChannel('http://177.53.155.236:8000/play/a037/index.m3u8')">
+            <img src="https://i.ibb.co/hxzjjS7/favicon.png" alt="ZoyTV Plus">
+            <span>Zoy Novelísima</span>
+        </div>
+
+
+
+
+
+        <div class="channel" data-category="Infantil" onclick="changeChannel('http://177.53.155.236:8000/play/a037/index.m3u8')">
+            <img src="https://i.ibb.co/hxzjjS7/favicon.png" alt="ZoyTV Plus">
+            <span>Adult Swing</span>
+        </div>
+        <div class="channel" data-category="Infantil" onclick="changeChannel('http://177.53.155.236:8000/play/a037/index.m3u8')">
+            <img src="https://i.ibb.co/hxzjjS7/favicon.png" alt="ZoyTV Plus">
+            <span>BabyFirst</span>
+        </div>
+        <div class="channel" data-category="Infantil" onclick="changeChannel('http://177.53.155.236:8000/play/a037/index.m3u8')">
+            <img src="https://i.ibb.co/hxzjjS7/favicon.png" alt="ZoyTV Plus">
+            <span>Disney Channel</span>
+        </div>
+        <div class="channel" data-category="Infantil" onclick="changeChannel('http://177.53.155.236:8000/play/a037/index.m3u8')">
+            <img src="https://i.ibb.co/hxzjjS7/favicon.png" alt="ZoyTV Plus">
+            <span>Disney JR</span>
+        </div>
+        <div class="channel" data-category="Infantil" onclick="changeChannel('http://177.53.155.236:8000/play/a02z/index.m3u8')">
+            <img src="https://i.ibb.co/hxzjjS7/favicon.png" alt="Infantil">
+            <span>Discovery Kids</span>
+        </div>
+        <div class="channel" data-category="Infantil" onclick="changeChannel('http://177.53.155.236:8000/play/a037/index.m3u8')">
+            <img src="https://i.ibb.co/hxzjjS7/favicon.png" alt="ZoyTV Plus">
+            <span>Nick</span>
+        </div>
+        <div class="channel" data-category="Infantil" onclick="changeChannel('http://177.53.155.236:8000/play/a037/index.m3u8')">
+            <img src="https://i.ibb.co/hxzjjS7/favicon.png" alt="ZoyTV Plus">
+            <span>Nick JR</span>
+        </div>
+        <div class="channel" data-category="Infantil" onclick="changeChannel('http://177.53.155.236:8000/play/a037/index.m3u8')">
+            <img src="https://i.ibb.co/hxzjjS7/favicon.png" alt="ZoyTV Plus">
+            <span>Nickelodeon</span>
+        </div>
+        <div class="channel" data-category="Infantil" onclick="changeChannel('http://177.53.155.236:8000/play/a037/index.m3u8')">
+            <img src="https://i.ibb.co/hxzjjS7/favicon.png" alt="ZoyTV Plus">
+            <span>Cartoon Network</span>
+        </div>
+        <div class="channel" data-category="Infantil" onclick="changeChannel('http://177.53.155.236:8000/play/a037/index.m3u8')">
+            <img src="https://i.ibb.co/hxzjjS7/favicon.png" alt="ZoyTV Plus">
+            <span>Lolly Kids</span>
+        </div>
+        <div class="channel" data-category="Infantil" onclick="changeChannel('http://177.53.155.236:8000/play/a037/index.m3u8')">
+            <img src="https://i.ibb.co/hxzjjS7/favicon.png" alt="ZoyTV Plus">
+            <span>Retromágico</span>
+        </div>
+        <div class="channel" data-category="Infantil" onclick="changeChannel('http://177.53.155.236:8000/play/a037/index.m3u8')">
+            <img src="https://i.ibb.co/hxzjjS7/favicon.png" alt="ZoyTV Plus">
+            <span>Presencia Kids TV</span>
+        </div>
+        <div class="channel" data-category="Infantil" onclick="changeChannel('http://177.53.155.236:8000/play/a037/index.m3u8')">
+            <img src="https://i.ibb.co/hxzjjS7/favicon.png" alt="ZoyTV Plus">
+            <span>Teen Nick</span>
+        </div>
+
+
+
+
+
+
+
+        <div class="channel" data-category="Deportes" onclick="changeChannel('http://177.53.155.236:8000/play/a037/index.m3u8')">
+            <img src="https://i.ibb.co/hxzjjS7/favicon.png" alt="ZoyTV Plus">
+            <span>ESPN 1</span>
+        </div>
+        <div class="channel" data-category="Deportes" onclick="changeChannel('http://177.53.155.236:8000/play/a037/index.m3u8')">
+            <img src="https://i.ibb.co/hxzjjS7/favicon.png" alt="ZoyTV Plus">
+            <span>ESPN 2</span>
+        </div>
+        <div class="channel" data-category="Deportes" onclick="changeChannel('http://177.53.155.236:8000/play/a037/index.m3u8')">
+            <img src="https://i.ibb.co/hxzjjS7/favicon.png" alt="ZoyTV Plus">
+            <span>ESPN 3</span>
+        </div>
+        <div class="channel" data-category="Deportes" onclick="changeChannel('http://177.53.155.236:8000/play/a037/index.m3u8')">
+            <img src="https://i.ibb.co/hxzjjS7/favicon.png" alt="ZoyTV Plus">
+            <span>ESPN 4</span>
+        </div>
+        <div class="channel" data-category="Deportes" onclick="changeChannel('http://177.53.155.236:8000/play/a02z/index.m3u8')">
+            <img src="https://i.ibb.co/hxzjjS7/favicon.png" alt="Infantil">
+            <span>ESPN 5</span>
+        </div>
+        <div class="channel" data-category="Deportes" onclick="changeChannel('http://177.53.155.236:8000/play/a037/index.m3u8')">
+            <img src="https://i.ibb.co/hxzjjS7/favicon.png" alt="ZoyTV Plus">
+            <span>ESPN 6</span>
+        </div>
+        <div class="channel" data-category="Deportes" onclick="changeChannel('http://177.53.155.236:8000/play/a037/index.m3u8')">
+            <img src="https://i.ibb.co/hxzjjS7/favicon.png" alt="ZoyTV Plus">
+            <span>ESPN 7</span>
+        </div>
+        <div class="channel" data-category="Deportes" onclick="changeChannel('http://177.53.155.236:8000/play/a037/index.m3u8')">
+            <img src="https://i.ibb.co/hxzjjS7/favicon.png" alt="ZoyTV Plus">
+            <span>Fox Sports 1</span>
+        </div>
+        <div class="channel" data-category="Deportes" onclick="changeChannel('http://177.53.155.236:8000/play/a037/index.m3u8')">
+            <img src="https://i.ibb.co/hxzjjS7/favicon.png" alt="ZoyTV Plus">
+            <span>Fox Sports 2</span>
+        </div>
+        <div class="channel" data-category="Deportes" onclick="changeChannel('http://177.53.155.236:8000/play/a037/index.m3u8')">
+            <img src="https://i.ibb.co/hxzjjS7/favicon.png" alt="ZoyTV Plus">
+            <span>Fox Sports 3</span>
+        </div>
+        <div class="channel" data-category="Deportes" onclick="changeChannel('http://177.53.155.236:8000/play/a02z/index.m3u8')">
+            <img src="https://i.ibb.co/hxzjjS7/favicon.png" alt="Infantil">
+            <span>GolPerú</span>
+        </div>
+        <div class="channel" data-category="Deportes" onclick="changeChannel('http://177.53.155.236:8000/play/a037/index.m3u8')">
+            <img src="https://i.ibb.co/hxzjjS7/favicon.png" alt="ZoyTV Plus">
+            <span>GolTV</span>
+        </div>
+        <div class="channel" data-category="Deportes" onclick="changeChannel('http://177.53.155.236:8000/play/a037/index.m3u8')">
+            <img src="https://i.ibb.co/hxzjjS7/favicon.png" alt="ZoyTV Plus">
+            <span>Liga-1</span>
+        </div>
+        <div class="channel" data-category="Deportes" onclick="changeChannel('http://177.53.155.236:8000/play/a037/index.m3u8')">
+            <img src="https://i.ibb.co/hxzjjS7/favicon.png" alt="ZoyTV Plus">
+            <span>Movistar Deportes</span>
+        </div>
+        <div class="channel" data-category="Deportes" onclick="changeChannel('http://177.53.155.236:8000/play/a02z/index.m3u8')">
+            <img src="https://i.ibb.co/hxzjjS7/favicon.png" alt="Infantil">
+            <span>TyC Sports</span>
+        </div>
+        <div class="channel" data-category="Deportes" onclick="changeChannel('http://177.53.155.236:8000/play/a037/index.m3u8')">
+            <img src="https://i.ibb.co/hxzjjS7/favicon.png" alt="ZoyTV Plus">
+            <span>TNT Sports</span>
+        </div>
+        
+
+
+
+
+
+
+
+        <div class="channel" data-category="Cine" onclick="changeChannel('http://177.53.155.236:8000/play/a037/index.m3u8')">
+            <img src="https://i.ibb.co/hxzjjS7/favicon.png" alt="ZoyTV Plus">
+            <span>AXN</span>
+        </div>
+        <div class="channel" data-category="Cine" onclick="changeChannel('http://177.53.155.236:8000/play/a037/index.m3u8')">
+            <img src="https://i.ibb.co/hxzjjS7/favicon.png" alt="ZoyTV Plus">
+            <span>A3Series</span>
+        </div>
+        <div class="channel" data-category="Cine" onclick="changeChannel('http://177.53.155.236:8000/play/a037/index.m3u8')">
+            <img src="https://i.ibb.co/hxzjjS7/favicon.png" alt="ZoyTV Plus">
+            <span>Golden</span>
+        </div>
+        <div class="channel" data-category="Cine" onclick="changeChannel('http://177.53.155.236:8000/play/a037/index.m3u8')">
+            <img src="https://i.ibb.co/hxzjjS7/favicon.png" alt="ZoyTV Plus">
+            <span>Cinemax</span>
+        </div>
+        <div class="channel" data-category="Cine" onclick="changeChannel('http://177.53.155.236:8000/play/a037/index.m3u8')">
+            <img src="https://i.ibb.co/hxzjjS7/favicon.png" alt="ZoyTV Plus">
+            <span>Claro Cinema</span>
+        </div>
+        <div class="channel" data-category="Cine" onclick="changeChannel('http://177.53.155.236:8000/play/a037/index.m3u8')">
+            <img src="https://i.ibb.co/hxzjjS7/favicon.png" alt="ZoyTV Plus">
+            <span>TNT</span>
+        </div>
+        <div class="channel" data-category="Cine" onclick="changeChannel('http://177.53.155.236:8000/play/a037/index.m3u8')">
+            <img src="https://i.ibb.co/hxzjjS7/favicon.png" alt="ZoyTV Plus">
+            <span>TNT Series</span>
+        </div>
+        <div class="channel" data-category="Cine" onclick="changeChannel('http://177.53.155.236:8000/play/a037/index.m3u8')">
+            <img src="https://i.ibb.co/hxzjjS7/favicon.png" alt="ZoyTV Plus">
+            <span>FX</span>
+        </div>
+        <div class="channel" data-category="Cine" onclick="changeChannel('http://177.53.155.236:8000/play/a037/index.m3u8')">
+            <img src="https://i.ibb.co/hxzjjS7/favicon.png" alt="ZoyTV Plus">
+            <span>Warner</span>
+        </div>
+        <div class="channel" data-category="Cine" onclick="changeChannel('http://177.53.155.236:8000/play/a037/index.m3u8')">
+            <img src="https://i.ibb.co/hxzjjS7/favicon.png" alt="ZoyTV Plus">
+            <span>Cinecanal</span>
+        </div>
+        <div class="channel" data-category="Cine" onclick="changeChannel('http://177.53.155.236:8000/play/a037/index.m3u8')">
+            <img src="https://i.ibb.co/hxzjjS7/favicon.png" alt="ZoyTV Plus">
+            <span>HBO</span>
+        </div>
+        <div class="channel" data-category="Cine" onclick="changeChannel('http://177.53.155.236:8000/play/a037/index.m3u8')">
+            <img src="https://i.ibb.co/hxzjjS7/favicon.png" alt="ZoyTV Plus">
+            <span>HBO 2</span>
+        </div>
+        <div class="channel" data-category="Cine" onclick="changeChannel('http://177.53.155.236:8000/play/a037/index.m3u8')">
+            <img src="https://i.ibb.co/hxzjjS7/favicon.png" alt="ZoyTV Plus">
+            <span>HBO Plus</span>
+        </div>
+        <div class="channel" data-category="Cine" onclick="changeChannel('http://177.53.155.236:8000/play/a037/index.m3u8')">
+            <img src="https://i.ibb.co/hxzjjS7/favicon.png" alt="ZoyTV Plus">
+            <span>HBO Xtreme</span>
+        </div>
+        <div class="channel" data-category="Cine" onclick="changeChannel('http://177.53.155.236:8000/play/a037/index.m3u8')">
+            <img src="https://i.ibb.co/hxzjjS7/favicon.png" alt="ZoyTV Plus">
+            <span>HBO Signature</span>
+        </div>
+        <div class="channel" data-category="Cine" onclick="changeChannel('http://177.53.155.236:8000/play/a037/index.m3u8')">
+            <img src="https://i.ibb.co/hxzjjS7/favicon.png" alt="ZoyTV Plus">
+            <span>HBO Family</span>
+        </div>
+        <div class="channel" data-category="Cine" onclick="changeChannel('http://177.53.155.236:8000/play/a037/index.m3u8')">
+            <img src="https://i.ibb.co/hxzjjS7/favicon.png" alt="ZoyTV Plus">
+            <span>Star Channel</span>
+        </div>
+        <div class="channel" data-category="Cine" onclick="changeChannel('http://177.53.155.236:8000/play/a037/index.m3u8')">
+            <img src="https://i.ibb.co/hxzjjS7/favicon.png" alt="ZoyTV Plus">
+            <span>Paramount</span>
+        </div>
+        <div class="channel" data-category="Cine" onclick="changeChannel('http://177.53.155.236:8000/play/a037/index.m3u8')">
+            <img src="https://i.ibb.co/hxzjjS7/favicon.png" alt="ZoyTV Plus">
+            <span>Space</span>
+        </div>
+        <div class="channel" data-category="Cine" onclick="changeChannel('http://177.53.155.236:8000/play/a037/index.m3u8')">
+            <img src="https://i.ibb.co/hxzjjS7/favicon.png" alt="ZoyTV Plus">
+            <span>TCM</span>
+        </div>
+        <div class="channel" data-category="Cine" onclick="changeChannel('http://177.53.155.236:8000/play/a037/index.m3u8')">
+            <img src="https://i.ibb.co/hxzjjS7/favicon.png" alt="ZoyTV Plus">
+            <span>DHE</span>
+        </div>
+        <div class="channel" data-category="Cine" onclick="changeChannel('http://177.53.155.236:8000/play/a037/index.m3u8')">
+            <img src="https://i.ibb.co/hxzjjS7/favicon.png" alt="ZoyTV Plus">
+            <span>AMC</span>
+        </div>
+        <div class="channel" data-category="Cine" onclick="changeChannel('http://177.53.155.236:8000/play/a037/index.m3u8')">
+            <img src="https://i.ibb.co/hxzjjS7/favicon.png" alt="ZoyTV Plus">
+            <span>A&E</span>
+        </div>
+        <div class="channel" data-category="Cine" onclick="changeChannel('http://177.53.155.236:8000/play/a037/index.m3u8')">
+            <img src="https://i.ibb.co/hxzjjS7/favicon.png" alt="ZoyTV Plus">
+            <span>A&E Mundo</span>
+        </div>
+        <div class="channel" data-category="Cine" onclick="changeChannel('http://177.53.155.236:8000/play/a037/index.m3u8')">
+            <img src="https://i.ibb.co/hxzjjS7/favicon.png" alt="ZoyTV Plus">
+            <span>USA Network</span>
+        </div>
+        <div class="channel" data-category="Cine" onclick="changeChannel('http://177.53.155.236:8000/play/a037/index.m3u8')">
+            <img src="https://i.ibb.co/hxzjjS7/favicon.png" alt="ZoyTV Plus">
+            <span>Studio Universal</span>
+        </div>
+        <div class="channel" data-category="Cine" onclick="changeChannel('http://177.53.155.236:8000/play/a037/index.m3u8')">
+            <img src="https://i.ibb.co/hxzjjS7/favicon.png" alt="ZoyTV Plus">
+            <span>Movistar Plus</span>
+        </div>
+        <div class="channel" data-category="Cine" onclick="changeChannel('http://177.53.155.236:8000/play/a037/index.m3u8')">
+            <img src="https://i.ibb.co/hxzjjS7/favicon.png" alt="ZoyTV Plus">
+            <span>Star TVE</span>
+        </div>
+        <div class="channel" data-category="Cine" onclick="changeChannel('http://177.53.155.236:8000/play/a037/index.m3u8')">
+            <img src="https://i.ibb.co/hxzjjS7/favicon.png" alt="ZoyTV Plus">
+            <span>Sin Limites</span>
+        </div>
+        <div class="channel" data-category="Cine" onclick="changeChannel('http://177.53.155.236:8000/play/a037/index.m3u8')">
+            <img src="https://i.ibb.co/hxzjjS7/favicon.png" alt="ZoyTV Plus">
+            <span>Sony</span>
+        </div>
+        <div class="channel" data-category="Cine" onclick="changeChannel('http://177.53.155.236:8000/play/a037/index.m3u8')">
+            <img src="https://i.ibb.co/hxzjjS7/favicon.png" alt="ZoyTV Plus">
+            <span>Sony Movies</span>
+        </div>
+        <div class="channel" data-category="Cine" onclick="changeChannel('http://177.53.155.236:8000/play/a037/index.m3u8')">
+            <img src="https://i.ibb.co/hxzjjS7/favicon.png" alt="ZoyTV Plus">
+            <span>Universal</span>
+        </div>
+
+
+
+
+
+
+
+
+        <div class="channel" data-category="Cultura" onclick="changeChannel('http://177.53.155.236:8000/play/a037/index.m3u8')">
+            <img src="https://i.ibb.co/hxzjjS7/favicon.png" alt="ZoyTV Plus">
+            <span>Discovery Channel</span>
+        </div>
+        <div class="channel" data-category="Cultura" onclick="changeChannel('http://177.53.155.236:8000/play/a037/index.m3u8')">
+            <img src="https://i.ibb.co/hxzjjS7/favicon.png" alt="ZoyTV Plus">
+            <span>Discovery World</span>
+        </div>
+        <div class="channel" data-category="Cultura" onclick="changeChannel('http://177.53.155.236:8000/play/a037/index.m3u8')">
+            <img src="https://i.ibb.co/hxzjjS7/favicon.png" alt="ZoyTV Plus">
+            <span>Discovery Turbo</span>
+        </div>
+        <div class="channel" data-category="Cultura" onclick="changeChannel('http://177.53.155.236:8000/play/a037/index.m3u8')">
+            <img src="https://i.ibb.co/hxzjjS7/favicon.png" alt="ZoyTV Plus">
+            <span>Discovery Theater</span>
+        </div>
+        <div class="channel" data-category="Cultura" onclick="changeChannel('http://177.53.155.236:8000/play/a037/index.m3u8')">
+            <img src="https://i.ibb.co/hxzjjS7/favicon.png" alt="ZoyTV Plus">
+            <span>Discovery ID</span>
+        </div>
+        
+
+
+
+
+
+    </div>
+    <script>
+        function changeChannel(url) {
+            const player = document.getElementById('player');
+            player.src = url;
+            player.play();
+        }
+        
+        function filterChannels(category) {
+            const channels = document.querySelectorAll('.channel');
+            channels.forEach(channel => {
+                channel.style.display = channel.getAttribute('data-category') === category ? 'flex' : 'none';
+            });
+        }
+
+        function toggleSearch() {
+            const searchContainer = document.getElementById('search-container');
+            searchContainer.style.display = searchContainer.style.display === 'block' ? 'none' : 'block';
+            document.getElementById('search-input').focus();
+        }
+
+        function searchChannel() {
+            const input = document.getElementById('search-input').value.toLowerCase();
+            const channels = document.querySelectorAll('.channel');
+            channels.forEach(channel => {
+                const name = channel.querySelector('span').innerText.toLowerCase();
+                channel.style.display = name.includes(input) ? 'flex' : 'none';
+            });
+        }
+    </script>
+</body>
+</html>
