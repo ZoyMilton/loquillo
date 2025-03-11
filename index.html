@@ -168,10 +168,6 @@
         
     </div>
     <div id="channels">
-        <div class="channel" data-category="ZoyTV" onclick="changeChannel(this, 'https://fl1004.bozztv.com/ssh101/zoytv/index.m3u8')">
-            <img src="https://i.ibb.co/hxzjjS7/favicon.png" alt="ZoyTV Plus">
-            <span>Zoy Plus</span>
-        </div>
         <div class="channel" data-category="ZoyTV" onclick="changeChannel(this, 'https://fl1004.bozztv.com/ssh101/zoytvturcas/index.m3u8')">
             <img src="https://i.ibb.co/hxzjjS7/favicon.png" alt="ZoyTV Plus">
             <span>Zoy Turcas</span>
@@ -185,7 +181,7 @@
             <span>Zoy Música</span>
         </div>
         <div class="channel" data-category="ZoyTV" onclick="changeChannel(this, 'http://88.212.7.11/live/test_erox_hd_hevc/playlist.m3u8?ZoyMilton')">
-            <img src="https://i.ibb.co/hxzjjS7/favicon.png" alt="Infantil">
+            <img src="https://i.ibb.co/hxzjjS7/favicon.png" alt="ZoyTV Plus">
             <span>Zoy eroXXX</span>
         </div>
         <div class="channel" data-category="ZoyTV" onclick="changeChannel(this, 'https://fl1004.bozztv.com/ssh101/zoytvsports/index.m3u8')">
@@ -550,7 +546,6 @@
             
             const player = document.getElementById('player');
             player.src = url;
-            player.play();
         }
         
         function filterChannels(element, category) {
